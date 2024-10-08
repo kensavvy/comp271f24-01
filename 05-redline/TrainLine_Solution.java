@@ -1,89 +1,90 @@
-public class TrainLine {
+public class TrainLine_Solution {
 
-    /** The name of the trainline */
-    private String name;
-    /** Points to the first station in the trainline */
     private TrainStation head;
-    /** Points to the last station in the trainline */
     private TrainStation tail;
-    /** Keeps a running tally of train stations in the trainline */
+    private String name;
     private int numberOfStations;
 
     /** Full constructor */
-    public TrainLine(String name, TrainStation head) {
-        this.name = name;
+    public TrainLine_Solution(String name, TrainStation head) {
         this.head = head;
-        this.numberOfStations = 0;
-        if (this.head != null) {
-            // If head is not null, there is one station in the line
-            this.numberOfStations = 1;
-        }
-        // At initialization head and tail point to the same station even if null
-        this.tail = null;
+        this.tail = head;
+        this.name = name;
+        this.numberOfStations = (head == null) ? 0 : 1;
     } // full constructor
 
     /** Basic constructor */
-    public TrainLine(String name) {
+    public TrainLine_Solution(String name) {
         this(name, null);
     } // basic constructor
 
-    /**
-     * Creates a new station with the given name and adds it to the end of the line.
-     */
+    /** Adds a station to the end of the line */
     public void add(String name) {
-        // Create the new station to add
+        // Create new station with given name
         TrainStation newStation = new TrainStation(name);
-        // Determine where to place the new station
         if (this.head == null) {
-            // Trainline is empty, make new station the head of the line
+            // Line is empty; make new station the head station
             this.head = newStation;
         } else {
-            // When there is a head station already, add the new station after the last
-            // station in the line.
+            // Line is not empty; add new station after last station
             this.tail.setNext(newStation);
         }
-        // The new station becomes the tail station of the line
+        // Update last station to newly added station
         this.tail = newStation;
-        // Update station count
+        // Update count of stations
         this.numberOfStations++;
     } // method add
 
-    /** Returns the number of stations in the line >= 0 */
-    public int getNumberOfStations() {
-        return numberOfStations;
-    } // method getNumberOfStations
+    /**
+     * Returns the position of a station with specified name. First station is 0. If
+     * station is not found method returns -1
+     */
+    public int indexOf(String name) {
+        int index = -1;
+        if (name != null) {
+            int i = 0;
+            TrainStation cursor = this.head;
+            while (cursor != null && index < 0) {
+                if (name.equals(cursor.getName())) {
+                    index = i;
+                }
+                i++;
+                cursor = cursor.getNext();
+            }
+        }
+        return index;
+    } // method indexOf
 
-    /*
-     * METHOD STUBS TO ENSURE CODE COMPILES. YOU WILL HAVE TO REWRITE THIS CODE TO
-     * MATCH THE SPECIFICATIONS AND ALSO YOU'LL HAVE TO WRITE METHOD isEmpty.
+    /**
+     * Returns true if station with given name exists in the train line, false
+     * otherwise. Method is based on indexOf.
      */
     public boolean contains(String name) {
-        return false;
-    }
+        return this.indexOf(name) > -1;
+    } // method contains
 
-    public int indexOf(String name) {
-        return -10;
-    }
-
+    /** Returns a string with all the stations in reverse order */
     public String reverseList() {
-        return "niart";
-    }
+        String list = "";
+        TrainStation cursor = this.head;
+        while (cursor != null) {
+            list = cursor.getName() + "\n" + list;
+            cursor = cursor.getNext();
+        }
+        return list;
+    } // method reverseList
 
-    /*******************************************************************************
-     * DO NOT REMOVE TESTS FROM THE CODE BELOW. YOU MAY **ADD** YOUR OWN TESTS BUT *
-     * YOU MAY NOT REMOVE ANY OF THE EXISTING TEST CODE. *
-     ******************************************************************************/
     public static void main(String[] args) {
         // A few station names
         String[] stationNames = { "Howard", "Jarvis", "Morse",
                 "Loyola", "Granville", "Thorndale" };
         // A populated trainline
-        TrainLine redLineSB = new TrainLine("Red Line SB");
+        TrainLine_Solution redLineSB = new TrainLine_Solution("Red Line SB");
         for (String station : stationNames) {
             redLineSB.add(station);
         }
         // An empty trainline
-        TrainLine brownLineSB = new TrainLine("Brown Line SB");
+        TrainLine_Solution brownLineSB = new TrainLine_Solution("Brown Line SB");
         // A random station name
         String randomName = "Oak Park";
         // Guard tests
@@ -126,12 +127,12 @@ public class TrainLine {
         String formatContainsTestNonExisting = "\ncontains test for non existing values: .... %s";
         String reportReverseListTest = (reverseListTest) ? PASS : FAIL;
         String formatReverseListTest = "\nreverseList test: ......................... %s\n\n";
-        System.out.printf(formatIndexOfTestExisting, reportIndexOfTestExisting);
-        System.out.printf(formatIndexOfTestEmpty, reportIndexOfTestEmpty);
+        System.out.printf(formatIndexOfTestExisting, reportIndexOfTestEmpty);
         System.out.printf(formatIndexOfTestNonExisting, reportIndexOfTestNonExisting);
+        System.out.printf(formatIndexOfTestEmpty, reportIndexOfTestEmpty);
         System.out.printf(formatContainsTestExisting, reportContaisTestExisting);
         System.out.printf(formatContainsTestNonExisting, reportContainsTestNonExisting);
         System.out.printf(formatReverseListTest, reportReverseListTest);
-        // ----------- YOU MAY ADD YOUR OWN TESTS BELOW THIS COMMENT LINE ---------------
-    } // method main
-} // class TrainLine
+
+    }
+}
